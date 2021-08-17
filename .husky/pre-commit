@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-eslint "**/*.js" --ignore-pattern "node_modules/"
+eslint "**/*.js" --ignore-pattern "node_modules/" --debug
