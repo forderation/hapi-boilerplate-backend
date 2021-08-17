@@ -1,0 +1,15 @@
+# exclude node_modules dir
+node_modules/
+
+# exclude idea jetbrains
+.idea
+
+# exclude vscode setting
+.vscode
+
+# exlude all file logging at logging_Data
+logging_data/*
+!logging_data/.gitkeep
+
+# exlude env
+.env
