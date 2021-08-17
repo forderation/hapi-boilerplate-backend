@@ -1,4 +1,11 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-eslint "**/*.js" --ignore-pattern "node_modules/" --debug
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
+
+echo "[linter] start to fix all"
+eslint --fix
+eslint "**/*.js" --ignore-pattern "node_modules/"
+echo "${green} [linter] linter passed all project${reset}"
