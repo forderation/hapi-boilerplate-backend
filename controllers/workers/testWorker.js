@@ -1,40 +1,41 @@
 'use strict'
 
 /**
- * set your worker to related db name here
+ * Class test worker, inject your models and collections if any on params constructor
  */
-const mysqldb = process.env.MYSQL_NAME
-const mongodb = process.env.MONGO_NAME
+class TestWorker {
+  constructor ({ models, collections }) {
+    this._models = models
+    this._collections = collections
+  }
 
-const addTestWorker = async (h, value) => {
-  const models = h[`sequelize.${mysqldb}`]
-  return models.testModel.create(value)
+  get models () {
+    return this._models
+  }
+
+  get collections () {
+    return this._collections
+  }
+
+  async addTest (value) {
+    return await this._models.testModel.create(value)
+  }
+
+  async getTest (query) {
+    return await this._models.testModel.findAll(query)
+  }
+
+  async removeTest (query) {
+    return await this._models.testModel.destroy(query)
+  }
+
+  async addTestLog (value) {
+    return await this._collections.testSchema.create(value)
+  }
+
+  async getTestLog (query) {
+    return await this._collections.testSchema.find(query)
+  }
 }
 
-const getTestWorker = async (h, query) => {
-  const models = h[`sequelize.${mysqldb}`]
-  return models.testModel.findAll(query)
-}
-
-const removeTestWorker = async (h, query) => {
-  const models = h[`sequelize.${mysqldb}`]
-  return models.testModel.destroy(query)
-}
-
-const addTestLogWorker = async (h, value) => {
-  const collections = h[`mongoose.${mongodb}`]
-  return collections.testSchema.create(value)
-}
-
-const getTestLogWorker = async (h, query) => {
-  const collections = h[`mongoose.${mongodb}`]
-  return collections.testSchema.find(query)
-}
-
-module.exports = {
-  addTestWorker,
-  getTestWorker,
-  removeTestWorker,
-  addTestLogWorker,
-  getTestLogWorker
-}
+module.exports = TestWorker

@@ -1,6 +1,4 @@
-/**
- * Standard unicoop service response
- */
+'use strict'
 
 class StandardResponse {
   // default not found json response (404)

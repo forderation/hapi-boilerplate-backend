@@ -117,6 +117,23 @@ lab.experiment('test server are ok == ', () => {
     })
   })
 
+  lab.test('test mongo get not found', async () => {
+    const res = await server.inject({
+      method: 'post',
+      url: '/demo-unicoop/v1/test/mongo/get',
+      payload: {
+        key: 'thiskeycannotbefound'
+      }
+    })
+    expect(res.statusCode).to.equal(200)
+    lab.it('it should contain standard response', () => {
+      expect(res.result.code).to.equal('DATA_NOT_FOUND')
+      expect(res.result.error).to.equal(true)
+      expect(res.result.data).to.exist()
+      expect(res.result.message).equal(String)
+    })
+  })
+
   lab.test('test validator joi work', async () => {
     const res = await server.inject({
       method: 'post',

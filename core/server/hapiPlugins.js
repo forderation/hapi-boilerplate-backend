@@ -1,12 +1,34 @@
 'use strict'
-const StandardResponse = require('../../utils/response')
 const Logger = require('../../utils/logger')
 const hapiSequelize = require('../db/hapiSequelize')
 const hapiMongoose = require('../db/hapiMongoose')
+const hapiResponse = require('../utils/hapiResponse')
 
 async function initPlugins (server) {
   console.info('[i] server start to loading plugin')
-  // {{Register hapi plugins below here}}
+
+  // hapi-response plugins
+  await server.register({
+    plugin: hapiResponse
+  })
+
+  /**
+   * @description determine if an array contains one or more items from another array.
+   * @param {array} haystack the array to search.
+   * @param {array} arr the array providing items to check for in the haystack.
+   * @param  {array} count minimum to true
+   * @return {boolean} true|false if haystack contains at least {count} param item from arr.
+   */
+  const compareArray = (haystack, arr, count) => {
+    let trueCount = 0
+    arr.forEach(v => {
+      const result = haystack.includes(v)
+      if (result) {
+        trueCount += 1
+      }
+    })
+    return trueCount >= count
+  }
 
   // 500 Internal error handler
   server.ext('onPreResponse', function (request, h) {
@@ -14,13 +36,21 @@ async function initPlugins (server) {
     if (!response.isBoom) {
       return h.continue
     }
+
     if (response?.output?.statusCode === 400) {
       const message = response?.output?.payload.message
       const validation = response?.output?.payload.validation
-      return h.response(StandardResponse.invalidRequest(message, validation)).code(400)
+      return h.response(h.objectResponse.invalidRequest(message, validation)).code(400)
     }
-    // Replace error with standard unicoop error
-    return h.response(StandardResponse.errorResponse(request.response)).code(500)
+
+    const checkResponse = Object.keys(response?.data || {})
+    const target = ['code', 'message', 'data', 'error']
+    if (compareArray(target, checkResponse, target.length)) {
+      return h.response(response.data)
+    }
+
+    // Replace error with standard json error
+    return h.response(h.objectResponse.errorResponse(request.response)).code(500)
   })
 
   server.events.on('request', (request, event, tags) => {
@@ -41,7 +71,7 @@ async function initPlugins (server) {
     method: '*',
     path: '/{p*}',
     handler: function (request, h) {
-      return h.response(StandardResponse.notFoundResponse()).code(404)
+      return h.response(h.objectResponse.notFoundResponse()).code(404)
     }
   })
 

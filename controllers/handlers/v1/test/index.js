@@ -1,9 +1,9 @@
-const getTestHandler = require('./getTestHandler')
-const addTestHandler = require('./addTestHandler')
-const removeTestHandler = require('./removeTestHandler')
-const addTestLogHandler = require('./addTestLogHandler')
-const getTestLogHandler = require('./getTestLogHandler')
-const getPingHandler = require('./getPingHandler')
+const getTestHandler = require('./handler/getTestHandler')
+const addTestHandler = require('./handler/addTestHandler')
+const removeTestHandler = require('./handler/removeTestHandler')
+const addTestLogHandler = require('./handler/addTestLogHandler')
+const getTestLogHandler = require('./handler/getTestLogHandler')
+const getPingHandler = require('./handler/getPingHandler')
 const validator = require('./validator')
 
 module.exports = {

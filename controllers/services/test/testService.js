@@ -2,24 +2,14 @@
 const hitter = require('../../../utils/axios')
 
 /**
- * Just Testing to hit self service
+ * hit ping service
+ * @param {*} param0 {options: options axios, payload: payload body if any, method: method http request}
+ * @returns
  */
 
-const config = {
-  baseURL: `http://${process.env.APP_HOST}:${process.env.APP_PORT}`
-}
-
-/**
- * get hit ping service
- * @param payload if any
- * @param queryParam if any
- */
-const hitPingService = async function ({
-  payload,
-  queryParam
-}) {
-  const hitterInstance = hitter(config)
-  const response = await hitterInstance.get('/demo-unicoop/ping')
+const hitPingService = async function ({ options, payload = {}, method = '' }) {
+  const hitterInstance = hitter(options)
+  const response = await hitterInstance[method.toLowerCase()]('/demo-unicoop/ping')
   return response?.data
 }
 
